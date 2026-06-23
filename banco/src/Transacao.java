@@ -7,6 +7,8 @@ public class Transacao {
     private String tipo;
     private double valor;
     private LocalDateTime dataHora;
+    private String remetente;
+    private String destinatario;
 
     public Transacao(String tipo, double valor){
         this.tipo = tipo;

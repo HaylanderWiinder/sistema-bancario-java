@@ -2,12 +2,20 @@ public static void main(String[] args) {
 
     int opcao = 0;
 
+
     Scanner scanner =  new Scanner(System.in);
+
+    Banco banco = new Banco();
+
     Cliente cliente1 = new Cliente("Haylander", "49075735880");
     Cliente cliente2 = new Cliente("Camila", "40028922");
 
-
     Conta conta1 = new Conta(cliente1, 5000);
+    Conta conta2 = new Conta(cliente2, 7000 );
+
+    banco.adicionarContas(conta1);
+    banco.adicionarContas(conta2);
+
 
 
 
@@ -16,9 +24,11 @@ public static void main(String[] args) {
     String cpfDigitado = scanner.nextLine();
     System.out.println("\n");
 
-    if (conta1.getTitular().getCpf().equals(cpfDigitado)){
-        System.out.println("CPF encontrado");
-        System.out.println("Bem vindo " + conta1.getTitular().getNome());
+    Conta contaLogada = banco.buscarContaPorCpf(cpfDigitado);
+
+    if (contaLogada != null){
+
+        System.out.println("Bem vindo " + contaLogada.getTitular().getNome());
         System.out.println("\n");
     } else {
         System.out.println("CPF invalido");
@@ -35,9 +45,9 @@ public static void main(String[] args) {
             case 1:
                 System.out.println("digite o valor do seu saque");
                 double saque = scanner.nextDouble();
-                if (conta1.sacar(saque)){
+                if (contaLogada.sacar(saque)){
                     System.out.println("Saque realizado com sucesso ");
-                    System.out.println("saldo atual é de R$: " + conta1.getSaldo());
+                    System.out.println("saldo atual é de R$: " + contaLogada.getSaldo());
                 }else{
                     System.out.println("Saldo insuficiente");
                     System.out.println("\n");
@@ -46,38 +56,49 @@ public static void main(String[] args) {
             case 2:
                 System.out.println("digite o valor do seu deposito");
                 double deposito = scanner.nextDouble();
-                conta1.depositar(deposito);
+                contaLogada.depositar(deposito);
                 System.out.println("Deposito realizado com sucesso");
-                System.out.println("Seu saldo atual é de R$: " + conta1.getSaldo());
+                System.out.println("Seu saldo atual é de R$: " + contaLogada.getSaldo());
                 break;
 
             case 3:
-                System.out.println("digite o valor da transferencia");
-                double transferir = scanner.nextDouble();
-                if (conta1.transferencia(transferir)){
-                    System.out.println("Tranferencia realizada com sucesso");
-                    System.out.println("Seu saldo atual é de R$: " + conta1.getSaldo());
-                }else{
-                    System.out.println("transferencia negada");
-                    System.out.println("Saldo insuficiente");
+                System.out.println("digite o CPF de destino");
+                scanner.nextLine();
+                String cpfDestino = scanner.nextLine();
+
+                Conta contaDestino = banco.buscarContaPorCpf(cpfDestino);
+
+                if (contaDestino == null || cpfDestino.equalsIgnoreCase("49075735880")){
+                    System.out.println("Conta não encontrada");
+                    break;
                 }
-                break;
+                System.out.println("digite o valor da transferencia");
+                double valor = scanner.nextDouble();
+
+                if (contaLogada.transferir(contaDestino, valor)){
+                    System.out.println("Transferencia realizada com sucesso");
+
+                }else
+                    System.out.println("Falha na transação!!!");
+
+
 
             case 4:
-                System.out.println(conta1.getSaldo());
+                System.out.println(contaLogada.getSaldo());
                 break;
 
             case 5:
-                conta1.mostrarHistorico();
+                contaLogada.mostrarHistorico();
                 break;
 
             case 6:
-                conta1.quantidadeTransacoes();
+                contaLogada.quantidadeTransacoes();
                 break;
 
             case 7:
-                System.out.println("Sistema finalizado com sucesso");
+                System.out.println("Sistema finalizado");
+                }
                 break;
+
         }
-    }
 }

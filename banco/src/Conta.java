@@ -57,14 +57,22 @@ public class Conta {
         return false;
     }
 
-    public boolean transferencia(double valor) {
-        if (valor <= saldo) {
-            saldo -= valor;
-            this.adicionarHistorico("Transferência", valor);
-            return true;
+    public boolean transferir(Conta destino,double valor) {
+        if (valor <= 0 || this.saldo < valor){
+            return false;
         }
-        return false;
+        this.saldo -= valor;
+        destino.saldo += valor;
+
+        this.adicionarHistorico("Transferencia realizada com sucesso" + destino.getTitular().getNome(),  valor);
+        destino.adicionarHistorico("Transferencia recebida"+ this.getTitular().getNome(), valor);
+
+        return true;
     }
+
+
+
+
 
     public double getSaldo() {
         return saldo;
