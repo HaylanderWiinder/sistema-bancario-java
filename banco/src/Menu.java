@@ -8,7 +8,8 @@ public class Menu {
                 4 - ver saldo 
                 5 - mostrar historico 
                 6 - quantidade de trancações 
-                7 - sair """);
+                7 - trocar conta
+                8 - sair """);
 
     }
 }

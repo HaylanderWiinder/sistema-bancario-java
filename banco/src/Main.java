@@ -3,7 +3,7 @@ public static void main(String[] args) {
     int opcao = 0;
 
 
-    Scanner scanner =  new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
 
     Banco banco = new Banco();
 
@@ -11,12 +11,10 @@ public static void main(String[] args) {
     Cliente cliente2 = new Cliente("Camila", "40028922");
 
     Conta conta1 = new Conta(cliente1, 5000);
-    Conta conta2 = new Conta(cliente2, 7000 );
+    Conta conta2 = new Conta(cliente2, 7000);
 
     banco.adicionarContas(conta1);
     banco.adicionarContas(conta2);
-
-
 
 
     System.out.println("Faça o login:");
@@ -26,7 +24,7 @@ public static void main(String[] args) {
 
     Conta contaLogada = banco.buscarContaPorCpf(cpfDigitado);
 
-    if (contaLogada != null){
+    if (contaLogada != null) {
 
         System.out.println("Bem vindo " + contaLogada.getTitular().getNome());
         System.out.println("\n");
@@ -36,22 +34,24 @@ public static void main(String[] args) {
         return;
     }
 
-    while (opcao !=7){
+    while (opcao != 8) {
         Menu.mostrarMenu();
         System.out.println("digite uma opção");
         opcao = scanner.nextInt();
 
-        switch (opcao){
+
+        switch (opcao) {
             case 1:
                 System.out.println("digite o valor do seu saque");
                 double saque = scanner.nextDouble();
-                if (contaLogada.sacar(saque)){
+                if (contaLogada.sacar(saque)) {
                     System.out.println("Saque realizado com sucesso ");
                     System.out.println("saldo atual é de R$: " + contaLogada.getSaldo());
-                }else{
+                } else {
                     System.out.println("Saldo insuficiente");
                     System.out.println("\n");
-                }break;
+                }
+                break;
 
             case 2:
                 System.out.println("digite o valor do seu deposito");
@@ -68,19 +68,18 @@ public static void main(String[] args) {
 
                 Conta contaDestino = banco.buscarContaPorCpf(cpfDestino);
 
-                if (contaDestino == null || cpfDestino.equalsIgnoreCase("49075735880")){
+                if (contaDestino == null) {
                     System.out.println("Conta não encontrada");
                     break;
                 }
                 System.out.println("digite o valor da transferencia");
                 double valor = scanner.nextDouble();
 
-                if (contaLogada.transferir(contaDestino, valor)){
+                if (contaLogada.transferir(contaDestino, valor)) {
                     System.out.println("Transferencia realizada com sucesso");
 
-                }else
+                } else
                     System.out.println("Falha na transação!!!");
-
 
 
             case 4:
@@ -96,9 +95,12 @@ public static void main(String[] args) {
                 break;
 
             case 7:
-                System.out.println("Sistema finalizado");
-                }
+                scanner.nextLine();
+                contaLogada = Conta.fazerLogin(banco, scanner);
                 break;
 
+            case 8:
+                System.out.println("Sistema finalizado");
         }
+    }
 }

@@ -1,11 +1,13 @@
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Conta {
 
     private Cliente titular;
     private double saldo;
     private ArrayList<Transacao> historico;
+
 
     public Cliente getTitular(){
         return titular;
@@ -58,14 +60,17 @@ public class Conta {
     }
 
     public boolean transferir(Conta destino,double valor) {
+        if (destino == this){
+            return false;
+        }
         if (valor <= 0 || this.saldo < valor){
             return false;
         }
         this.saldo -= valor;
         destino.saldo += valor;
 
-        this.adicionarHistorico("Transferencia realizada com sucesso" + destino.getTitular().getNome(),  valor);
-        destino.adicionarHistorico("Transferencia recebida"+ this.getTitular().getNome(), valor);
+        this.adicionarHistorico("Transferencia realizada com sucesso para | " + destino.getTitular().getNome(),  valor);
+        destino.adicionarHistorico("Transferencia recebida de | "+ this.getTitular().getNome(), valor);
 
         return true;
     }
@@ -92,5 +97,26 @@ public class Conta {
         }
     }
 
+    public static Conta fazerLogin(Banco banco, Scanner scanner){
 
-}
+        System.out.println("Digite o CPF da conta:");
+        String cpfDoUsuario = scanner.nextLine();
+
+        Conta contaLogada = banco.buscarContaPorCpf(cpfDoUsuario);
+
+        while (contaLogada == null){
+
+            System.out.println("CPF inválido, tente novamente:");
+            cpfDoUsuario = scanner.nextLine();
+
+            contaLogada = banco.buscarContaPorCpf(cpfDoUsuario);
+        }
+        System.out.println("\n");
+        System.out.println("Login efetuado com sucesso \n");
+        System.out.println("Bem vindo " +
+                contaLogada.getTitular().getNome() + "\n");
+
+        return contaLogada;
+    }
+
+    }
