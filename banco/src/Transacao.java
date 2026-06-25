@@ -6,6 +6,7 @@ public class Transacao {
 
     private String tipo;
     private double valor;
+
     private LocalDateTime dataHora;
     private String remetente;
     private String destinatario;

@@ -6,15 +6,32 @@ public class Conta {
 
     private Cliente titular;
     private double saldo;
+    private String tipoDaConta;
+    private String agencia;
+    private String banco;
+
+    private  String numeroDaConta;
+
     private ArrayList<Transacao> historico;
 
+    public String getAgencia() {
+        return agencia;
+    }
+
+    public String getNumeroDaConta(){
+        return numeroDaConta;
+    }
 
     public Cliente getTitular(){
         return titular;
     }
 
 
-    public Conta(Cliente titular, double saldoInicial) {
+    public Conta(String banco,String tipoDaConta,String agencia,String numeroDaconta, Cliente titular, double saldoInicial) {
+        this.banco = banco;
+        this.tipoDaConta = tipoDaConta;
+        this.agencia = agencia;
+        this.numeroDaConta = numeroDaconta;
         this.titular = titular;
         this.saldo = saldoInicial;
         this.historico = new ArrayList<>();
@@ -69,10 +86,25 @@ public class Conta {
         this.saldo -= valor;
         destino.saldo += valor;
 
-        this.adicionarHistorico("Transferencia realizada com sucesso para | " + destino.getTitular().getNome(),  valor);
-        destino.adicionarHistorico("Transferencia recebida de | "+ this.getTitular().getNome(), valor);
+        this.adicionarHistorico("Transferencia realizada com sucesso para | " + destino.resumoDaConta(),  valor);
+        destino.adicionarHistorico("Transferencia recebida de | "+ this.resumoDaConta(), valor);
 
         return true;
+    }
+
+    public String resumoDaConta(){
+        return "Titular: " + titular.getNome()
+                + " | Banco: " + banco
+                + " | tipo da conta: " + tipoDaConta
+                + " | Agência: " + agencia
+                + " | Conta: " + numeroDaConta;
+    }
+
+    public String dadosDaConta(){
+        return " | " + titular.getNome()
+                + "| Banco: " + banco
+                + "| agencia:  " + agencia
+                + "| conta: " + numeroDaConta + " | ";
     }
 
 
@@ -114,7 +146,7 @@ public class Conta {
         System.out.println("\n");
         System.out.println("Login efetuado com sucesso \n");
         System.out.println("Bem vindo " +
-                contaLogada.getTitular().getNome() + "\n");
+                contaLogada.dadosDaConta() + "\n");
 
         return contaLogada;
     }

@@ -10,8 +10,8 @@ public static void main(String[] args) {
     Cliente cliente1 = new Cliente("Haylander", "49075735880");
     Cliente cliente2 = new Cliente("Camila", "40028922");
 
-    Conta conta1 = new Conta(cliente1, 5000);
-    Conta conta2 = new Conta(cliente2, 7000);
+    Conta conta1 = new Conta("Caixa economica","Conta corrente","0001", "1089-3",cliente1,7000);
+    Conta conta2 = new Conta("Santander","Conta poupança","0002", "4002-8",cliente2,7000);
 
     banco.adicionarContas(conta1);
     banco.adicionarContas(conta2);
@@ -26,7 +26,7 @@ public static void main(String[] args) {
 
     if (contaLogada != null) {
 
-        System.out.println("Bem vindo " + contaLogada.getTitular().getNome());
+        System.out.println("Bem vindo " + contaLogada.dadosDaConta());
         System.out.println("\n");
     } else {
         System.out.println("CPF invalido");
