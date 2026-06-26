@@ -87,7 +87,7 @@ public static void main(String[] args) {
                 break;
 
             case 5:
-                contaLogada.mostrarHistorico();
+                contaLogada.mostrarExtrato();
                 break;
 
             case 6:
@@ -96,7 +96,7 @@ public static void main(String[] args) {
 
             case 7:
                 scanner.nextLine();
-                contaLogada = Conta.fazerLogin(banco, scanner);
+                contaLogada = Login.fazerLogin(banco, scanner);
                 break;
 
             case 8:

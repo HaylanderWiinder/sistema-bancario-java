@@ -11,7 +11,9 @@ public class Transacao {
     private String remetente;
     private String destinatario;
 
-    public Transacao(String tipo, double valor){
+    public Transacao(String tipo, double valor, String remetente, String destinatario){
+        this.remetente = remetente;
+        this.destinatario = destinatario;
         this.tipo = tipo;
         this.valor = valor;
         this.dataHora = LocalDateTime.now();
@@ -20,10 +22,21 @@ public class Transacao {
 
     @Override
     public String toString() {
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        DateTimeFormatter formato =
+                DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-        return tipo +
-                " | R$ " + valor +
-                " | " + dataHora.format(formato);
+        String texto = tipo +
+                "\nValor: R$ " + valor +
+                "\nData: " + dataHora.format(formato);
+
+        if (remetente != null) {
+            texto += "\nRemetente: " + remetente;
+        }
+
+        if (destinatario != null) {
+            texto += "\nDestinatário: " + destinatario;
+        }
+
+        return texto;
     }
 }

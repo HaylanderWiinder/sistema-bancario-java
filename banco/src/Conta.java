@@ -10,89 +10,134 @@ public class Conta {
     private String agencia;
     private String banco;
 
-    private  String numeroDaConta;
+    private String numeroDaConta;
 
-    private ArrayList<Transacao> historico;
+    private ArrayList<Transacao> transacoes;
+
 
     public String getAgencia() {
         return agencia;
     }
 
-    public String getNumeroDaConta(){
+    public String getNumeroDaConta() {
         return numeroDaConta;
     }
 
-    public Cliente getTitular(){
+    public Cliente getTitular() {
         return titular;
     }
 
 
-    public Conta(String banco,String tipoDaConta,String agencia,String numeroDaconta, Cliente titular, double saldoInicial) {
+    public Conta(String banco, String tipoDaConta, String agencia, String numeroDaconta, Cliente titular, double saldoInicial) {
         this.banco = banco;
         this.tipoDaConta = tipoDaConta;
         this.agencia = agencia;
         this.numeroDaConta = numeroDaconta;
         this.titular = titular;
         this.saldo = saldoInicial;
-        this.historico = new ArrayList<>();
+        this.transacoes = new ArrayList<>();
     }
 
-    private void adicionarHistorico(String tipo, double valor) {
-       Transacao transacao = new Transacao(tipo,valor);
-       historico.add(transacao);
+    private void adicionarTransacao(String tipo, double valor, String remetente,String destinatario) {
+        Transacao transacao = new Transacao(tipo, valor, remetente, destinatario);
+        transacoes.add(transacao);
 
     }
 
-    public void mostrarHistorico() {
+    public void mostrarExtrato() {
 
-        if (historico.isEmpty()) {
-            System.out.println("Nenhuma transação encontrada.\n");
-            return;
+        System.out.println("==============================");
+        System.out.println("        " + banco.toUpperCase());
+        System.out.println("==============================");
+
+        System.out.println("Titular: " + titular.getNome());
+        System.out.println("CPF: " + titular.getCpf());
+
+        System.out.println("Agência: " + agencia);
+        System.out.println("Conta: " + numeroDaConta);
+        System.out.println("Tipo: " + tipoDaConta);
+
+        System.out.println("------------------------------");
+        System.out.println("MOVIMENTAÇÕES");
+        System.out.println("------------------------------");
+
+        if (transacoes.isEmpty()) {
+
+            System.out.println("Nenhuma movimentação encontrada.");
+
+        } else {
+
+            for (Transacao transacao : transacoes) {
+                System.out.println(transacao);
+            }
+
         }
 
-        for (int i = 0; i < historico.size(); i++) {
-            System.out.println(historico.get(i));
-        }
+        System.out.println("------------------------------");
+        System.out.println("Quantidade de transações: " + transacoes.size());
 
-        System.out.println("--------------------");
-        System.out.println("Saldo atual: R$ " + saldo);
+        System.out.printf("Saldo atual: R$ %.2f%n", saldo);
+
+        System.out.println("==============================");
     }
 
-    public boolean sacar(double valor) {
-        if (valor <= saldo) {
-            saldo -= valor;
-            this.adicionarHistorico("Saque", valor);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean depositar(double valor) {
-        if (valor > 0) {
-            saldo += valor;
-            this.adicionarHistorico("Depósito", valor);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean transferir(Conta destino,double valor) {
-        if (destino == this){
+    public boolean transferir(Conta destino, double valor) {
+        if (destino == this) {
             return false;
         }
-        if (valor <= 0 || this.saldo < valor){
+        if (valor <= 0 || this.saldo < valor) {
             return false;
         }
         this.saldo -= valor;
         destino.saldo += valor;
 
-        this.adicionarHistorico("Transferencia realizada com sucesso para | " + destino.resumoDaConta(),  valor);
-        destino.adicionarHistorico("Transferencia recebida de | "+ this.resumoDaConta(), valor);
+        this.adicionarTransacao(
+                "Transferência enviada",
+                valor,
+                this.getTitular().getNome(),
+                destino.getTitular().getNome()
+        );
+
+        destino.adicionarTransacao(
+                "Transferência recebida",
+                valor,
+                this.getTitular().getNome(),
+                destino.getTitular().getNome()
+        );
+        return true;
+    }
+
+    public boolean sacar(double valor) {
+
+        if (valor <= 0) {
+            return false;
+        }
+
+        if (saldo < valor) {
+            return false;
+        }
+
+        saldo -= valor;
+
+        adicionarTransacao("Saque", valor, titular.getNome(), null);
 
         return true;
     }
 
-    public String resumoDaConta(){
+    public boolean depositar(double valor) {
+
+        if (valor <= 0) {
+            return false;
+        }
+
+        saldo += valor;
+
+        adicionarTransacao("Depósito", valor, null, titular.getNome());
+
+        return true;
+    }
+
+    public String resumoDaConta() {
         return "Titular: " + titular.getNome()
                 + " | Banco: " + banco
                 + " | tipo da conta: " + tipoDaConta
@@ -100,7 +145,7 @@ public class Conta {
                 + " | Conta: " + numeroDaConta;
     }
 
-    public String dadosDaConta(){
+    public String dadosDaConta() {
         return " | " + titular.getNome()
                 + "| Banco: " + banco
                 + "| agencia:  " + agencia
@@ -108,47 +153,19 @@ public class Conta {
     }
 
 
-
-
-
     public double getSaldo() {
         return saldo;
     }
 
 
-
-
     public void quantidadeTransacoes() {
 
-        if (historico.isEmpty()) {
+        if (transacoes.isEmpty()) {
             System.out.println("Nenhuma transação foi realizada.");
         } else {
             System.out.println("Você realizou "
-                    + historico.size()
+                    + transacoes.size()
                     + " transações.");
         }
     }
-
-    public static Conta fazerLogin(Banco banco, Scanner scanner){
-
-        System.out.println("Digite o CPF da conta:");
-        String cpfDoUsuario = scanner.nextLine();
-
-        Conta contaLogada = banco.buscarContaPorCpf(cpfDoUsuario);
-
-        while (contaLogada == null){
-
-            System.out.println("CPF inválido, tente novamente:");
-            cpfDoUsuario = scanner.nextLine();
-
-            contaLogada = banco.buscarContaPorCpf(cpfDoUsuario);
-        }
-        System.out.println("\n");
-        System.out.println("Login efetuado com sucesso \n");
-        System.out.println("Bem vindo " +
-                contaLogada.dadosDaConta() + "\n");
-
-        return contaLogada;
-    }
-
-    }
+}
