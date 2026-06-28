@@ -28,19 +28,23 @@ public class Transacao {
 
     @Override
     public String toString() {
-        DateTimeFormatter formato =
-                DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
         String texto = tipo +
-                "\nValor: R$ " + valor +
-                "\nData: " + dataHora.format(formato);
+                "\nValor: R$ " + String.format("%.2f", valor) +
+                "\nData : " + dataHora.format(formato);
 
         if (remetente != null) {
-            texto += "\nRemetente: " + remetente;
+            texto += "\n\nRemetente";
+            texto += "\n------------------------------";
+            texto += "\n" + remetente.dadosFormatados();
         }
 
         if (destinatario != null) {
-            texto += "\nDestinatário: " + destinatario;
+            texto += "\n\nDestinatário";
+            texto += "\n------------------------------";
+            texto += "\n" + destinatario.dadosFormatados();
         }
 
         return texto;

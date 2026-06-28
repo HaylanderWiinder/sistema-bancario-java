@@ -6,7 +6,7 @@ public class Menu {
                 2 - depositar 
                 3 - transferir 
                 4 - ver saldo 
-                5 - mostrar historico 
+                5 - mostrar extrato 
                 6 - quantidade de trancações 
                 7 - trocar conta
                 8 - sair """);

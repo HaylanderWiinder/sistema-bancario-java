@@ -174,4 +174,19 @@ public class Conta {
                     + " transações.");
         }
     }
+
+    public String dadosFormatados() {
+        return "Titular : " + titular.getNome() +
+                "\nBanco   : " + banco +
+                "\nAgência : " + agencia +
+                "\nConta   : " + numeroDaConta;
+    }
+
+    @Override
+    public String toString() {
+        return "Titular: " + titular.getNome()
+                + " | Banco: " + banco
+                + " | Agência: " + agencia
+                + " | Conta: " + numeroDaConta;
+    }
 }
