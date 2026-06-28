@@ -8,14 +8,20 @@ public class Transacao {
     private double valor;
 
     private LocalDateTime dataHora;
-    private String remetente;
-    private String destinatario;
+    private Conta remetente;
+    private Conta destinatario;
 
-    public Transacao(String tipo, double valor, String remetente, String destinatario){
-        this.remetente = remetente;
-        this.destinatario = destinatario;
+    public Transacao(String tipo, double valor) {
         this.tipo = tipo;
         this.valor = valor;
+        this.dataHora = LocalDateTime.now();
+    }
+
+    public Transacao(String tipo, double valor, Conta remetente, Conta destinatario){
+        this.tipo = tipo;
+        this.valor = valor;
+        this.remetente = remetente;
+        this.destinatario = destinatario;
         this.dataHora = LocalDateTime.now();
 
     }

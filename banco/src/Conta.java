@@ -38,10 +38,15 @@ public class Conta {
         this.transacoes = new ArrayList<>();
     }
 
-    private void adicionarTransacao(String tipo, double valor, String remetente,String destinatario) {
+    private void adicionarTransacao(String tipo, double valor, Conta remetente,Conta destinatario) {
         Transacao transacao = new Transacao(tipo, valor, remetente, destinatario);
         transacoes.add(transacao);
 
+    }
+
+    public void adicionarTransacao(String tipo, double valor){
+        Transacao transacao = new Transacao(tipo, valor);
+        transacoes.add(transacao);
     }
 
     public void mostrarExtrato() {
@@ -94,15 +99,16 @@ public class Conta {
         this.adicionarTransacao(
                 "Transferência enviada",
                 valor,
-                this.getTitular().getNome(),
-                destino.getTitular().getNome()
+                this,
+                destino
+
         );
 
         destino.adicionarTransacao(
                 "Transferência recebida",
                 valor,
-                this.getTitular().getNome(),
-                destino.getTitular().getNome()
+                this,
+                destino
         );
         return true;
     }
@@ -119,7 +125,7 @@ public class Conta {
 
         saldo -= valor;
 
-        adicionarTransacao("Saque", valor, titular.getNome(), null);
+        adicionarTransacao("Saque", valor);
 
         return true;
     }
@@ -132,7 +138,7 @@ public class Conta {
 
         saldo += valor;
 
-        adicionarTransacao("Depósito", valor, null, titular.getNome());
+        adicionarTransacao("Depósito", valor);
 
         return true;
     }
