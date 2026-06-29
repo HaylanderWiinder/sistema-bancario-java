@@ -4,16 +4,20 @@ import java.util.Scanner;
 
 public class Conta {
 
-    private Cliente titular;
-    private double saldo;
-    private String tipoDaConta;
     private String agencia;
-    private String banco;
-
     private String numeroDaConta;
+    private String senha;
+    private String banco;
+    private String tipoDaConta;
+    private double saldo;
+    private Cliente titular;
+
 
     private ArrayList<Transacao> transacoes;
 
+    public String getSenha() {
+        return senha;
+    }
 
     public String getAgencia() {
         return agencia;
@@ -28,7 +32,10 @@ public class Conta {
     }
 
 
-    public Conta(String banco, String tipoDaConta, String agencia, String numeroDaconta, Cliente titular, double saldoInicial) {
+    public Conta(String banco, String tipoDaConta, String agencia, String numeroDaconta, String senha, Cliente titular, double saldoInicial) {
+
+
+        this.senha = senha;
         this.banco = banco;
         this.tipoDaConta = tipoDaConta;
         this.agencia = agencia;
@@ -85,6 +92,8 @@ public class Conta {
 
         System.out.println("==============================");
     }
+
+
 
     public boolean transferir(Conta destino, double valor) {
         if (destino == this) {

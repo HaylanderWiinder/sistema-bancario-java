@@ -12,16 +12,33 @@ public class Banco {
         contas.add(conta);
     }
 
-    public Conta buscarContaPorCpf(String cpf) {
+    public Conta autenticarConta(String agencia, String numeroConta, String senha){
+
+        for (Conta conta: contas){
+            if (conta.getAgencia().equals(agencia)
+            && conta.getNumeroDaConta().equals(numeroConta)
+            && conta.getSenha().equals(senha)){
+
+                return conta;
+            }
+
+        }
+        return null;
+
+    }
+
+    public Conta buscarConta(String agencia, String numeroConta) {
 
         for (Conta conta : contas) {
 
-            if (conta.getTitular().getCpf().equals(cpf)) {
+            if (conta.getAgencia().equals(agencia)
+                    && conta.getNumeroDaConta().equals(numeroConta)) {
+
                 return conta;
             }
         }
 
         return null;
-
     }
+
 }

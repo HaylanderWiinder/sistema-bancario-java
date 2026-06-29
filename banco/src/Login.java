@@ -4,17 +4,32 @@ public class Login {
 
     public static Conta fazerLogin(Banco banco, Scanner scanner){
 
-        System.out.println("Digite o CPF da conta:");
-        String cpfDoUsuario = scanner.nextLine();
+        System.out.println("Digite a agencia :");
+        String agencia = scanner.nextLine();
 
-        Conta contaLogada = banco.buscarContaPorCpf(cpfDoUsuario);
+        System.out.println("digite a conta :");
+        String numeroConta = scanner.nextLine();
+
+        System.out.println("digite sua senha :");
+        String senha = scanner.nextLine();
+
+        Conta contaLogada = banco.autenticarConta(agencia, numeroConta, senha);
 
         while (contaLogada == null){
 
-            System.out.println("CPF inválido, tente novamente:");
-            cpfDoUsuario = scanner.nextLine();
+            System.out.println("Dados invalidos, tente novamente \n");
 
-            contaLogada = banco.buscarContaPorCpf(cpfDoUsuario);
+            System.out.println("Digite a agencia :");
+            agencia = scanner.nextLine();
+
+            System.out.println("digite a conta :");
+            numeroConta = scanner.nextLine();
+
+            System.out.println("digite sua senha :");
+            senha = scanner.nextLine();
+
+
+            contaLogada = banco.autenticarConta(agencia,numeroConta, senha);
         }
         System.out.println("\n");
         System.out.println("Login efetuado com sucesso \n");

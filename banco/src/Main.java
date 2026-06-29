@@ -10,29 +10,14 @@ public static void main(String[] args) {
     Cliente cliente1 = new Cliente("Haylander", "49075735880");
     Cliente cliente2 = new Cliente("Camila", "40028922");
 
-    Conta conta1 = new Conta("Caixa economica","Conta corrente","0001", "1089-3",cliente1,7000);
-    Conta conta2 = new Conta("Santander","Conta poupança","0002", "4002-8",cliente2,7000);
+    Conta conta1 = new Conta("Caixa economica","Conta corrente","0001", "1089-3","1006",cliente1,7000);
+    Conta conta2 = new Conta("Santander","Conta poupança","0002", "4002-8","100618", cliente2,7000);
 
     banco.adicionarContas(conta1);
     banco.adicionarContas(conta2);
 
 
-    System.out.println("Faça o login:");
-    System.out.println("Digite seu CPF:");
-    String cpfDigitado = scanner.nextLine();
-    System.out.println("\n");
-
-    Conta contaLogada = banco.buscarContaPorCpf(cpfDigitado);
-
-    if (contaLogada != null) {
-
-        System.out.println("Bem vindo " + contaLogada.dadosDaConta());
-        System.out.println("\n");
-    } else {
-        System.out.println("CPF invalido");
-        System.out.println("conta não encontrada!!!");
-        return;
-    }
+    Conta contaLogada = Login.fazerLogin(banco, scanner);
 
     while (opcao != 8) {
         Menu.mostrarMenu();
@@ -62,14 +47,18 @@ public static void main(String[] args) {
                 break;
 
             case 3:
-                System.out.println("digite o CPF de destino");
                 scanner.nextLine();
-                String cpfDestino = scanner.nextLine();
 
-                Conta contaDestino = banco.buscarContaPorCpf(cpfDestino);
+                System.out.println("digite a agencia :");
+                String agencia = scanner.nextLine();
+
+                System.out.println("digite a conta :");
+                String numeroConta = scanner.nextLine();
+
+                Conta contaDestino = banco.buscarConta(agencia, numeroConta);
 
                 if (contaDestino == null) {
-                    System.out.println("Conta não encontrada");
+                    System.out.println("Dados invalidos!!!");
                     break;
                 }
                 System.out.println("digite o valor da transferencia");
@@ -79,7 +68,7 @@ public static void main(String[] args) {
                     System.out.println("Transferencia realizada com sucesso");
 
                 } else
-                    System.out.println("Falha na transação!!!");
+                    System.out.println("Conta não encontrada!!!");
 
 
             case 4:
