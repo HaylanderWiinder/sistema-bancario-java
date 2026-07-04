@@ -1,6 +1,9 @@
+package model;
+
+import model.Cliente;
+import model.Transacao;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Conta {
 
@@ -154,7 +157,7 @@ public class Conta {
 
     public String resumoDaConta() {
         return "Titular: " + titular.getNome()
-                + " | Banco: " + banco
+                + " | model.Banco: " + banco
                 + " | tipo da conta: " + tipoDaConta
                 + " | Agência: " + agencia
                 + " | Conta: " + numeroDaConta;
@@ -162,7 +165,7 @@ public class Conta {
 
     public String dadosDaConta() {
         return " | " + titular.getNome()
-                + "| Banco: " + banco
+                + "| model.Banco: " + banco
                 + "| agencia:  " + agencia
                 + "| conta: " + numeroDaConta + " | ";
     }
@@ -186,7 +189,7 @@ public class Conta {
 
     public String dadosFormatados() {
         return "Titular : " + titular.getNome() +
-                "\nBanco   : " + banco +
+                "\nmodel.Banco   : " + banco +
                 "\nAgência : " + agencia +
                 "\nConta   : " + numeroDaConta;
     }
@@ -194,7 +197,7 @@ public class Conta {
     @Override
     public String toString() {
         return "Titular: " + titular.getNome()
-                + " | Banco: " + banco
+                + " | model.Banco: " + banco
                 + " | Agência: " + agencia
                 + " | Conta: " + numeroDaConta;
     }

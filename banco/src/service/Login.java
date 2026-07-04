@@ -1,3 +1,8 @@
+package service;
+
+import model.Banco;
+import model.Conta;
+
 import java.util.Scanner;
 
 public class Login {
@@ -32,7 +37,7 @@ public class Login {
             contaLogada = banco.autenticarConta(agencia,numeroConta, senha);
         }
         System.out.println("\n");
-        System.out.println("Login efetuado com sucesso \n");
+        System.out.println("service.Login efetuado com sucesso \n");
         System.out.println("Bem vindo " +
                 contaLogada.dadosDaConta() + "\n");
 

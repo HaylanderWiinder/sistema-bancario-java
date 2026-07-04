@@ -1,3 +1,9 @@
+import model.Banco;
+import model.Cliente;
+import model.Conta;
+import service.Login;
+import util.Menu;
+
 public static void main(String[] args) {
 
     int opcao = 0;
