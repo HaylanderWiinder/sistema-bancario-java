@@ -13,8 +13,8 @@ public static void main(String[] args) {
 
     Banco banco = new Banco();
 
-    Cliente cliente1 = new Cliente("Haylander", "49075735880");
-    Cliente cliente2 = new Cliente("Camila", "40028922");
+    Cliente cliente1 = new Cliente("Haylander", "49075735880","haylanderw@gmail.com","(11)98898-4828");
+    Cliente cliente2 = new Cliente("Camila", "40028922","camilaw@gmail.com","(11)912345678");
 
     Conta conta1 = new Conta("Caixa economica","Conta corrente","0001", "1089-3","1006",cliente1,7000);
     Conta conta2 = new Conta("Santander","Conta poupança","0002", "4002-8","100618", cliente2,7000);
