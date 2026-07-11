@@ -4,6 +4,7 @@ import model.Agencia;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class AgenciaService {
 
@@ -23,4 +24,38 @@ public class AgenciaService {
 
     }
 
+    public void listarAgencias() {
+
+        System.out.println("\n===== AGÊNCIAS DISPONÍVEIS =====");
+
+        for (Agencia agencia : agencias) {
+
+            System.out.println(
+                    agencia.getId() +
+                            " - " +
+                            agencia.getCodigo() +
+                            " - " +
+                            agencia.getNome()
+            );
+        }
+
+    }
+
+    public Agencia buscarPorId(int id) {
+        for (Agencia agencia : agencias) {
+            if (agencia.getId() == id) {
+                return agencia;
+            }
+        }
+        return null;
+    }
+
+    public Agencia escolherAgencia(){
+        listarAgencias();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Escolha uma uma agencia");
+        int opcao = scanner.nextInt();
+
+        return buscarPorId(opcao);
+    }
 }

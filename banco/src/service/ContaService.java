@@ -33,4 +33,27 @@ public class ContaService {
 
     }
 
+    private String escolherTipoConta(){
+        System.out.println("----- Escolha o tipo da conta -----");
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("1 - conta corrente");
+        System.out.println("2 - conta poupança");
+
+        int opcao = scanner.nextInt();
+
+        switch (opcao ) {
+            case 1:
+                return "corrente";
+
+            case 2:
+                return "poupança";
+
+            default:
+                return "opção invalida";
+        }
+
+
+    }
+
 }

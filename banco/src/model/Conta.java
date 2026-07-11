@@ -7,13 +7,14 @@ import java.util.ArrayList;
 
 public class Conta {
 
-    private String agencia;
-    private String numeroDaConta;
+    private Cliente cliente;
+    private Agencia agencia;
+    private String numeroConta;
     private String senha;
-    private String banco;
-    private String tipoDaConta;
+    private String tipoConta;
     private double saldo;
-    private Cliente titular;
+    private static int sequenciaConta = 1000;
+
 
 
     private ArrayList<Transacao> transacoes;
@@ -22,30 +23,38 @@ public class Conta {
         return senha;
     }
 
-    public String getAgencia() {
+    public Agencia getAgencia() {
         return agencia;
     }
 
     public String getNumeroDaConta() {
-        return numeroDaConta;
+        return numeroConta;
     }
 
-    public Cliente getTitular() {
-        return titular;
+    public Cliente getCliente() {
+        return cliente;
     }
 
 
-    public Conta(String banco, String tipoDaConta, String agencia, String numeroDaconta, String senha, Cliente titular, double saldoInicial) {
+    public Conta(Cliente cliente, Agencia agencia, String tipoConta,String senha) {
 
 
-        this.senha = senha;
-        this.banco = banco;
-        this.tipoDaConta = tipoDaConta;
+        this.cliente = cliente;
         this.agencia = agencia;
-        this.numeroDaConta = numeroDaconta;
-        this.titular = titular;
-        this.saldo = saldoInicial;
+        this.tipoConta = tipoConta;
+        this.senha = senha;
+
+        this.numeroConta = gerarNumeroConta();
+
+        this.saldo = 0.0;
+
         this.transacoes = new ArrayList<>();
+    }
+
+    private String gerarNumeroConta(){
+        sequenciaConta++;
+        int digito = sequenciaConta % 10;
+        return sequenciaConta + "-" + digito;
     }
 
     private void adicionarTransacao(String tipo, double valor, Conta remetente,Conta destinatario) {
@@ -62,15 +71,23 @@ public class Conta {
     public void mostrarExtrato() {
 
         System.out.println("==============================");
-        System.out.println("        " + banco.toUpperCase());
+        System.out.println("-------- Sistema bancario --------");
         System.out.println("==============================");
 
-        System.out.println("Titular: " + titular.getNome());
-        System.out.println("CPF: " + titular.getCpf());
+        System.out.println("Titular: " + cliente.getNome());
+        System.out.println("CPF: " + cliente.getCpf());
 
-        System.out.println("Agência: " + agencia);
-        System.out.println("Conta: " + numeroDaConta);
-        System.out.println("Tipo: " + tipoDaConta);
+        System.out.println(
+                "Agência: "
+                        + agencia.getCodigo()
+                        + " - "
+                        + agencia.getNome()
+        );
+        System.out.println("Conta: "
+                + numeroConta);
+
+        System.out.println("Tipo: "
+                + tipoConta);
 
         System.out.println("------------------------------");
         System.out.println("MOVIMENTAÇÕES");
@@ -156,18 +173,16 @@ public class Conta {
     }
 
     public String resumoDaConta() {
-        return "Titular: " + titular.getNome()
-                + " | model.Banco: " + banco
-                + " | tipo da conta: " + tipoDaConta
+        return "Titular: " + cliente.getNome()
+                + " | tipo da conta: " + tipoConta
                 + " | Agência: " + agencia
-                + " | Conta: " + numeroDaConta;
+                + " | Conta: " + numeroConta;
     }
 
     public String dadosDaConta() {
-        return " | " + titular.getNome()
-                + "| model.Banco: " + banco
+        return " | " + cliente.getNome()
                 + "| agencia:  " + agencia
-                + "| conta: " + numeroDaConta + " | ";
+                + "| conta: " + numeroConta + " | ";
     }
 
 
@@ -188,17 +203,15 @@ public class Conta {
     }
 
     public String dadosFormatados() {
-        return "Titular : " + titular.getNome() +
-                "\nmodel.Banco   : " + banco +
+        return "Titular : " + cliente.getNome() +
                 "\nAgência : " + agencia +
-                "\nConta   : " + numeroDaConta;
+                "\nConta   : " + numeroConta;
     }
 
     @Override
     public String toString() {
-        return "Titular: " + titular.getNome()
-                + " | model.Banco: " + banco
+        return "Titular: " + cliente.getNome()
                 + " | Agência: " + agencia
-                + " | Conta: " + numeroDaConta;
+                + " | Conta: " + numeroConta;
     }
 }
