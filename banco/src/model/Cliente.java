@@ -3,6 +3,7 @@ package model;
 public class Cliente {
 
 
+    private int id;
     private String nome;
     private String cpf;
     private String email;
@@ -10,9 +11,15 @@ public class Cliente {
     private String telefone;
 
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public Cliente(String nome, String cpf, String email, String telefone){
+    public Cliente( String nome, String cpf, String email, String telefone){
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;

@@ -1,8 +1,5 @@
 package model;
 
-import model.Cliente;
-import model.Transacao;
-
 import java.util.ArrayList;
 
 public class Conta {
@@ -13,65 +10,89 @@ public class Conta {
     private String senha;
     private String tipoConta;
     private double saldo;
-    private static int sequenciaConta = 1000;
-
-
 
     private ArrayList<Transacao> transacoes;
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public Agencia getAgencia() {
-        return agencia;
-    }
-
-    public String getNumeroDaConta() {
-        return numeroConta;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-
-    public Conta(Cliente cliente, Agencia agencia, String tipoConta,String senha) {
-
+    public Conta(Cliente cliente,
+                 Agencia agencia,
+                 String tipoConta,
+                 String senha) {
 
         this.cliente = cliente;
         this.agencia = agencia;
         this.tipoConta = tipoConta;
         this.senha = senha;
 
-        this.numeroConta = gerarNumeroConta();
-
         this.saldo = 0.0;
-
         this.transacoes = new ArrayList<>();
     }
 
-    private String gerarNumeroConta(){
-        sequenciaConta++;
-        int digito = sequenciaConta % 10;
-        return sequenciaConta + "-" + digito;
+
+    // GETTERS E SETTERS
+    // ==========================
+
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    private void adicionarTransacao(String tipo, double valor, Conta remetente,Conta destinatario) {
-        Transacao transacao = new Transacao(tipo, valor, remetente, destinatario);
+    public Agencia getAgencia() {
+        return agencia;
+    }
+
+    public String getNumeroConta() {
+        return numeroConta;
+    }
+
+    public void setNumeroConta(String numeroConta) {
+        this.numeroConta = numeroConta;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public String getTipoConta() {
+        return tipoConta;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
+
+
+    // TRANSAÇÕES
+    // ==========================
+
+    private void adicionarTransacao(String tipo,
+                                    double valor,
+                                    Conta remetente,
+                                    Conta destinatario) {
+
+        Transacao transacao =
+                new Transacao(tipo, valor, remetente, destinatario);
+
         transacoes.add(transacao);
-
     }
 
-    public void adicionarTransacao(String tipo, double valor){
+    public void adicionarTransacao(String tipo, double valor) {
+
         Transacao transacao = new Transacao(tipo, valor);
+
         transacoes.add(transacao);
     }
+
+
+    // EXTRATO
+    // ==========================
 
     public void mostrarExtrato() {
 
         System.out.println("==============================");
-        System.out.println("-------- Sistema bancario --------");
+        System.out.println("      SISTEMA BANCÁRIO");
         System.out.println("==============================");
 
         System.out.println("Titular: " + cliente.getNome());
@@ -83,11 +104,10 @@ public class Conta {
                         + " - "
                         + agencia.getNome()
         );
-        System.out.println("Conta: "
-                + numeroConta);
 
-        System.out.println("Tipo: "
-                + tipoConta);
+        System.out.println("Conta: " + numeroConta);
+
+        System.out.println("Tipo: " + tipoConta);
 
         System.out.println("------------------------------");
         System.out.println("MOVIMENTAÇÕES");
@@ -106,7 +126,9 @@ public class Conta {
         }
 
         System.out.println("------------------------------");
-        System.out.println("Quantidade de transações: " + transacoes.size());
+
+        System.out.println("Quantidade de transações: "
+                + transacoes.size());
 
         System.out.printf("Saldo atual: R$ %.2f%n", saldo);
 
@@ -114,23 +136,27 @@ public class Conta {
     }
 
 
+    // OPERAÇÕES
+    // ==========================
 
     public boolean transferir(Conta destino, double valor) {
+
         if (destino == this) {
             return false;
         }
-        if (valor <= 0 || this.saldo < valor) {
+
+        if (valor <= 0 || saldo < valor) {
             return false;
         }
-        this.saldo -= valor;
+
+        saldo -= valor;
         destino.saldo += valor;
 
-        this.adicionarTransacao(
+        adicionarTransacao(
                 "Transferência enviada",
                 valor,
                 this,
                 destino
-
         );
 
         destino.adicionarTransacao(
@@ -139,6 +165,7 @@ public class Conta {
                 this,
                 destino
         );
+
         return true;
     }
 
@@ -172,46 +199,58 @@ public class Conta {
         return true;
     }
 
+    // ==========================
+    // INFORMAÇÕES
+    // ==========================
+
     public String resumoDaConta() {
+
         return "Titular: " + cliente.getNome()
-                + " | tipo da conta: " + tipoConta
-                + " | Agência: " + agencia
+                + " | Tipo: " + tipoConta
+                + " | Agência: " + agencia.getCodigo()
                 + " | Conta: " + numeroConta;
     }
 
     public String dadosDaConta() {
-        return " | " + cliente.getNome()
-                + "| agencia:  " + agencia
-                + "| conta: " + numeroConta + " | ";
+
+        return "Titular: " + cliente.getNome()
+                + " | Agência: " + agencia.getCodigo()
+                + " | Conta: " + numeroConta;
     }
-
-
-    public double getSaldo() {
-        return saldo;
-    }
-
 
     public void quantidadeTransacoes() {
 
         if (transacoes.isEmpty()) {
+
             System.out.println("Nenhuma transação foi realizada.");
+
         } else {
-            System.out.println("Você realizou "
-                    + transacoes.size()
-                    + " transações.");
+
+            System.out.println(
+                    "Você realizou "
+                            + transacoes.size()
+                            + " transações."
+            );
+
         }
     }
 
     public String dadosFormatados() {
-        return "Titular : " + cliente.getNome() +
-                "\nAgência : " + agencia +
-                "\nConta   : " + numeroConta;
+
+        return "Titular: " + cliente.getNome()
+                + "\nAgência: " + agencia.getCodigo()
+                + " - " + agencia.getNome()
+                + "\nConta: " + numeroConta
+                + "\nTipo: " + tipoConta
+                + String.format("\nSaldo: R$ %.2f", saldo);
     }
 
     @Override
     public String toString() {
+
         return "Titular: " + cliente.getNome()
-                + " | Agência: " + agencia
+                + " | Agência: " + agencia.getCodigo()
                 + " | Conta: " + numeroConta;
     }
+
 }

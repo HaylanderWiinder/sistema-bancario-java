@@ -18,7 +18,7 @@ public class Banco {
 
         for (Conta conta: contas){
             if (conta.getAgencia().equals(agencia)
-            && conta.getNumeroDaConta().equals(numeroConta)
+            && conta.getNumeroConta().equals(numeroConta)
             && conta.getSenha().equals(senha)){
 
                 return conta;
@@ -34,7 +34,7 @@ public class Banco {
         for (Conta conta : contas) {
 
             if (conta.getAgencia().equals(agencia)
-                    && conta.getNumeroDaConta().equals(numeroConta)) {
+                    && conta.getNumeroConta().equals(numeroConta)) {
 
                 return conta;
             }
