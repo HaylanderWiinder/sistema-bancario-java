@@ -8,6 +8,18 @@ public class MenuContaService {
 
     private final Scanner scanner = new Scanner(System.in);
 
+    private final SaqueService saqueService =
+            new SaqueService();
+
+    private final DepositoService depositoService =
+            new DepositoService();
+
+    private final TransferenciaService transferenciaService =
+            new TransferenciaService();
+
+    private final ExtratoService extratoService =
+            new ExtratoService();
+
     public void iniciar(Conta contaLogada) {
 
         int opcao;
@@ -15,7 +27,9 @@ public class MenuContaService {
         do {
 
             System.out.println();
-            System.out.println("======= MENU DA CONTA =======");
+            System.out.println("==================================");
+            System.out.println("          MENU DA CONTA");
+            System.out.println("==================================");
             System.out.println("1 - Sacar");
             System.out.println("2 - Depositar");
             System.out.println("3 - Transferir");
@@ -27,8 +41,55 @@ public class MenuContaService {
             opcao = scanner.nextInt();
             scanner.nextLine();
 
-            // Aqui entraremos com o switch
-            // (vamos implementar juntos)
+            switch (opcao) {
+
+                case 1:
+
+                    saqueService.sacar(contaLogada);
+
+                    break;
+
+                case 2:
+
+                    depositoService.depositar(contaLogada);
+
+                    break;
+
+                case 3:
+
+                    transferenciaService.transferir(contaLogada);
+
+                    break;
+
+                case 4:
+
+                    System.out.println();
+                    System.out.printf(
+                            "Saldo atual: R$ %.2f%n",
+                            contaLogada.getSaldo()
+                    );
+
+                    break;
+
+                case 5:
+
+                    extratoService.mostrarExtrato(contaLogada);
+
+                    break;
+
+                case 6:
+
+                    System.out.println();
+                    System.out.println("Logout realizado com sucesso.");
+
+                    break;
+
+                default:
+
+                    System.out.println();
+                    System.out.println("Opção inválida.");
+
+            }
 
         } while (opcao != 6);
 

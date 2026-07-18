@@ -5,18 +5,13 @@ import model.Agencia;
 import model.Cliente;
 import model.Conta;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ContaRepository {
 
     public void salvar(Conta conta) {
 
-        try {
-
-            Connection conexao = Conexao.conectar();
+        try (Connection conexao = Conexao.conectar()) {
 
             String numeroConta = gerarNumeroConta(conexao);
 
@@ -38,7 +33,10 @@ public class ContaRepository {
                     )
                     """;
 
-            PreparedStatement statement = conexao.prepareStatement(sql);
+            PreparedStatement statement = conexao.prepareStatement(
+                    sql,
+                    Statement.RETURN_GENERATED_KEYS
+            );
 
             statement.setInt(1, conta.getCliente().getId());
             statement.setInt(2, conta.getAgencia().getId());
@@ -49,8 +47,16 @@ public class ContaRepository {
 
             statement.executeUpdate();
 
+            ResultSet resultado = statement.getGeneratedKeys();
+
+            if (resultado.next()) {
+
+                conta.setId(resultado.getInt(1));
+
+            }
+
+            resultado.close();
             statement.close();
-            conexao.close();
 
         } catch (SQLException e) {
 
@@ -113,17 +119,16 @@ public class ContaRepository {
 
     public Conta buscarPorCliente(Cliente cliente) {
 
-        try {
-
-            Connection conexao = Conexao.conectar();
+        try (Connection conexao = Conexao.conectar()) {
 
             String sql = """
                     SELECT
+                        c.id,
                         c.numero_conta,
                         c.tipo_conta,
                         c.senha,
                         c.saldo,
-                        a.id,
+                        a.id AS agencia_id,
                         a.codigo,
                         a.nome
                     FROM conta c
@@ -141,7 +146,7 @@ public class ContaRepository {
             if (resultado.next()) {
 
                 Agencia agencia = new Agencia(
-                        resultado.getInt("id"),
+                        resultado.getInt("agencia_id"),
                         resultado.getString("codigo"),
                         resultado.getString("nome")
                 );
@@ -153,12 +158,12 @@ public class ContaRepository {
                         resultado.getString("senha")
                 );
 
+                conta.setId(resultado.getInt("id"));
                 conta.setNumeroConta(resultado.getString("numero_conta"));
                 conta.setSaldo(resultado.getDouble("saldo"));
 
                 resultado.close();
                 statement.close();
-                conexao.close();
 
                 return conta;
 
@@ -166,7 +171,103 @@ public class ContaRepository {
 
             resultado.close();
             statement.close();
-            conexao.close();
+
+            return null;
+
+        } catch (SQLException e) {
+
+            throw new RuntimeException(e);
+
+        }
+
+    }
+
+    public Conta buscarPorCpf(String cpf) {
+
+        ClienteRepository clienteRepository = new ClienteRepository();
+
+        Cliente cliente = clienteRepository.buscarPorCpf(cpf);
+
+        if (cliente == null) {
+
+            return null;
+
+        }
+
+        return buscarPorCliente(cliente);
+
+    }
+
+    public Conta buscarPorNumeroConta(String numeroConta) {
+
+        try (Connection conexao = Conexao.conectar()) {
+
+            String sql = """
+                    SELECT
+                        c.id,
+                        c.numero_conta,
+                        c.tipo_conta,
+                        c.senha,
+                        c.saldo,
+                        cli.id AS cliente_id,
+                        cli.nome,
+                        cli.cpf,
+                        cli.email,
+                        cli.telefone,
+                        a.id AS agencia_id,
+                        a.codigo,
+                        a.nome AS agencia_nome
+                    FROM conta c
+                    INNER JOIN cliente cli
+                        ON c.cliente_id = cli.id
+                    INNER JOIN agencia a
+                        ON c.agencia_id = a.id
+                    WHERE c.numero_conta = ?
+                    """;
+
+            PreparedStatement statement = conexao.prepareStatement(sql);
+
+            statement.setString(1, numeroConta);
+
+            ResultSet resultado = statement.executeQuery();
+
+            if (resultado.next()) {
+
+                Cliente cliente = new Cliente(
+                        resultado.getString("nome"),
+                        resultado.getString("cpf"),
+                        resultado.getString("email"),
+                        resultado.getString("telefone")
+                );
+
+                cliente.setId(resultado.getInt("cliente_id"));
+
+                Agencia agencia = new Agencia(
+                        resultado.getInt("agencia_id"),
+                        resultado.getString("codigo"),
+                        resultado.getString("agencia_nome")
+                );
+
+                Conta conta = new Conta(
+                        cliente,
+                        agencia,
+                        resultado.getString("tipo_conta"),
+                        resultado.getString("senha")
+                );
+
+                conta.setId(resultado.getInt("id"));
+                conta.setNumeroConta(resultado.getString("numero_conta"));
+                conta.setSaldo(resultado.getDouble("saldo"));
+
+                resultado.close();
+                statement.close();
+
+                return conta;
+
+            }
+
+            resultado.close();
+            statement.close();
 
             return null;
 
@@ -180,25 +281,22 @@ public class ContaRepository {
 
     public void atualizarSaldo(Conta conta) {
 
-        try {
-
-            Connection conexao = Conexao.conectar();
+        try (Connection conexao = Conexao.conectar()) {
 
             String sql = """
                     UPDATE conta
                     SET saldo = ?
-                    WHERE numero_conta = ?
+                    WHERE id = ?
                     """;
 
             PreparedStatement statement = conexao.prepareStatement(sql);
 
             statement.setDouble(1, conta.getSaldo());
-            statement.setString(2, conta.getNumeroConta());
+            statement.setInt(2, conta.getId());
 
             statement.executeUpdate();
 
             statement.close();
-            conexao.close();
 
         } catch (SQLException e) {
 
