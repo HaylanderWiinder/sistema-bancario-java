@@ -1,5 +1,7 @@
 package service;
 
+import exception.SaldoInsuficienteException;
+import exception.ValorInvalidoException;
 import model.Conta;
 import model.Movimentacao;
 import repository.ContaRepository;
@@ -28,14 +30,15 @@ public class SaqueService {
         double valor = scanner.nextDouble();
         scanner.nextLine();
 
-        if (!conta.sacar(valor)) {
-
-            System.out.println();
-            System.out.println("Saldo insuficiente ou valor inválido.");
-
-            return;
-
+        if (valor <= 0) {
+            throw new ValorInvalidoException();
         }
+
+        if (conta.getSaldo() < valor) {
+            throw new SaldoInsuficienteException();
+        }
+
+        conta.sacar(valor);
 
         contaRepository.atualizarSaldo(conta);
 

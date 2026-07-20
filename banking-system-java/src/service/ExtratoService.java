@@ -1,5 +1,6 @@
 package service;
 
+import exception.ContaNaoEncontradaException;
 import model.Conta;
 import model.Movimentacao;
 import repository.MovimentacaoRepository;
@@ -14,12 +15,19 @@ public class ExtratoService {
 
     public void mostrarExtrato(Conta conta) {
 
+        if (conta == null) {
+            throw new ContaNaoEncontradaException();
+        }
+
         List<Movimentacao> movimentacoes =
                 movimentacaoRepository.listarPorConta(conta);
 
+        DateTimeFormatter formato =
+                DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
         System.out.println();
         System.out.println("==============================================");
-        System.out.println("                EXTRATO BANCÁRIO");
+        System.out.println("              EXTRATO BANCÁRIO");
         System.out.println("==============================================");
 
         System.out.println("Titular : " + conta.getCliente().getNome());
@@ -35,16 +43,14 @@ public class ExtratoService {
 
         } else {
 
-            DateTimeFormatter formato =
-                    DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-
             for (Movimentacao movimentacao : movimentacoes) {
 
                 System.out.println("Tipo      : " + movimentacao.getTipo());
                 System.out.printf("Valor     : R$ %.2f%n", movimentacao.getValor());
                 System.out.println("Descrição : " + movimentacao.getDescricao());
-                System.out.println("Data      : " +
-                        movimentacao.getDataHora().format(formato));
+                System.out.println("Data      : "
+                        + movimentacao.getDataHora().format(formato));
+
                 System.out.println("----------------------------------------------");
 
             }

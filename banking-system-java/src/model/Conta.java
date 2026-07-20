@@ -71,54 +71,21 @@ public class Conta {
     // OPERAÇÕES
     // ==========
 
-    public boolean sacar(double valor) {
-
-        if (valor <= 0) {
-            return false;
-        }
-
-        if (saldo < valor) {
-            return false;
-        }
+    public void sacar(double valor) {
 
         saldo -= valor;
 
-        return true;
     }
 
-    public boolean depositar(double valor) {
-
-        if (valor <= 0) {
-            return false;
-        }
-
+    public void depositar(double valor) {
         saldo += valor;
-
-        return true;
     }
 
-    public boolean transferir(Conta destino, double valor) {
-
-        if (destino == null) {
-            return false;
-        }
-
-        if (destino == this) {
-            return false;
-        }
-
-        if (valor <= 0) {
-            return false;
-        }
-
-        if (saldo < valor) {
-            return false;
-        }
+    public void transferir(Conta destino, double valor) {
 
         this.saldo -= valor;
         destino.saldo += valor;
 
-        return true;
     }
 
     // ===========
@@ -138,6 +105,17 @@ public class Conta {
         return "Titular: " + cliente.getNome()
                 + " | Agência: " + agencia.getCodigo()
                 + " | Conta: " + numeroConta;
+    }
+
+    public String dadosTransferencia() {
+
+        return "Titular: " + cliente.getNome()
+                + "\nCPF: " + cliente.getCpf()
+                + "\nAgência: " + agencia.getCodigo()
+                + " - " + agencia.getNome()
+                + "\nConta: " + numeroConta
+                + "\nTipo: " + tipoConta;
+
     }
 
     public String dadosFormatados() {

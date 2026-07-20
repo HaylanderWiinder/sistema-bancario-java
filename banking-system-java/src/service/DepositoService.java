@@ -1,5 +1,6 @@
 package service;
 
+import exception.ValorInvalidoException;
 import model.Conta;
 import model.Movimentacao;
 import repository.ContaRepository;
@@ -28,13 +29,11 @@ public class DepositoService {
         double valor = scanner.nextDouble();
         scanner.nextLine();
 
-        if (!conta.depositar(valor)) {
-
-            System.out.println();
-            System.out.println("Valor inválido.");
-
-            return;
+        if (valor <= 0) {
+            throw new ValorInvalidoException();
         }
+
+        conta.depositar(valor);
 
         contaRepository.atualizarSaldo(conta);
 

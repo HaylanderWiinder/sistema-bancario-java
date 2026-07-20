@@ -1,5 +1,11 @@
 package service;
 
+import exception.ContaNaoEncontradaException;
+import exception.SaldoInsuficienteException;
+import exception.SenhaInvalidaException;
+import exception.TransferenciaInvalidaException;
+import exception.ValorInvalidoException;
+import model.Cliente;
 import model.Conta;
 import model.Movimentacao;
 import repository.ClienteRepository;
@@ -28,59 +34,59 @@ public class TransferenciaService {
         System.out.println("======= TRANSFERÊNCIA =======");
 
         System.out.print("CPF do destinatário: ");
-
         String cpf = scanner.nextLine();
 
-        var clienteDestino = clienteRepository.buscarPorCpf(cpf);
+        Cliente clienteDestino = clienteRepository.buscarPorCpf(cpf);
 
         if (clienteDestino == null) {
-
-            System.out.println();
-            System.out.println("Cliente não encontrado.");
-
-            return;
+            throw new ContaNaoEncontradaException(
+                    "Nenhuma conta foi encontrada para o CPF informado."
+            );
         }
 
-        Conta contaDestino =
-                contaRepository.buscarPorCliente(clienteDestino);
+        Conta contaDestino = contaRepository.buscarPorCliente(clienteDestino);
 
         if (contaDestino == null) {
-
-            System.out.println();
-            System.out.println("Conta do destinatário não encontrada.");
-
-            return;
+            throw new ContaNaoEncontradaException(
+                    "O cliente informado não possui conta cadastrada."
+            );
         }
 
         if (contaDestino.getId() == contaOrigem.getId()) {
-
-            System.out.println();
-            System.out.println("Você não pode transferir para sua própria conta.");
-
-            return;
+            throw new TransferenciaInvalidaException(
+                    "Não é permitido transferir para a própria conta."
+            );
         }
 
         System.out.println();
-        System.out.println("Destinatário:");
-        System.out.println(contaDestino.dadosFormatados());
+        System.out.println("===== DESTINATÁRIO =====");
+        System.out.println(contaDestino.dadosTransferencia());
 
         System.out.println();
 
         System.out.print("Valor da transferência: ");
-
         double valor = scanner.nextDouble();
         scanner.nextLine();
 
-        if (!contaOrigem.transferir(contaDestino, valor)) {
-
-            System.out.println();
-            System.out.println("Saldo insuficiente ou valor inválido.");
-
-            return;
+        if (valor <= 0) {
+            throw new ValorInvalidoException();
         }
 
-        contaRepository.atualizarSaldo(contaOrigem);
+        if (contaOrigem.getSaldo() < valor) {
+            throw new SaldoInsuficienteException();
+        }
 
+        System.out.println();
+        System.out.print("Confirme sua senha: ");
+        String senha = scanner.nextLine();
+
+        if (!contaOrigem.getSenha().equals(senha)) {
+            throw new SenhaInvalidaException();
+        }
+
+        contaOrigem.transferir(contaDestino, valor);
+
+        contaRepository.atualizarSaldo(contaOrigem);
         contaRepository.atualizarSaldo(contaDestino);
 
         Movimentacao envio = new Movimentacao();
@@ -89,8 +95,12 @@ public class TransferenciaService {
         envio.setTipo("TRANSFERÊNCIA ENVIADA");
         envio.setValor(valor);
         envio.setDescricao(
-                "Transferência para " +
-                        contaDestino.getCliente().getNome()
+                "Transferência para "
+                        + contaDestino.getCliente().getNome()
+                        + " | Agência "
+                        + contaDestino.getAgencia().getCodigo()
+                        + " | Conta "
+                        + contaDestino.getNumeroConta()
         );
         envio.setDataHora(LocalDateTime.now());
 
@@ -102,8 +112,12 @@ public class TransferenciaService {
         recebimento.setTipo("TRANSFERÊNCIA RECEBIDA");
         recebimento.setValor(valor);
         recebimento.setDescricao(
-                "Transferência recebida de " +
-                        contaOrigem.getCliente().getNome()
+                "Transferência recebida de "
+                        + contaOrigem.getCliente().getNome()
+                        + " | Agência "
+                        + contaOrigem.getAgencia().getCodigo()
+                        + " | Conta "
+                        + contaOrigem.getNumeroConta()
         );
         recebimento.setDataHora(LocalDateTime.now());
 
