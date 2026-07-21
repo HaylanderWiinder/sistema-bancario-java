@@ -22,12 +22,13 @@ O projeto foi organizado utilizando separação de responsabilidades.
 ```
 src
 │
+├── app
 ├── database
 ├── exception
 ├── model
 ├── repository
 ├── service
-└── Main.java
+└── util
 ```
 
 Cada camada possui uma responsabilidade específica:
