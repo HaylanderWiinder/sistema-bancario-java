@@ -101,7 +101,6 @@ O objetivo é desenvolver um sistema bancário cada vez mais próximo de aplica�
 
 # 🔄 Próximas implementações
 
-- Criptografia de senha (BCrypt)
 - Enum para TipoConta
 - Enum para TipoMovimentacao
 - Validação de CPF

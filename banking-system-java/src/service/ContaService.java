@@ -1,5 +1,6 @@
 package service;
 
+import util.PasswordEncoder;
 import model.Agencia;
 import model.Cliente;
 import model.Conta;
@@ -91,11 +92,13 @@ public class ContaService {
         // CRIA A CONTA
         // =====================
 
+        String senhaHash = PasswordEncoder.gerarHash(senha);
+
         Conta conta = new Conta(
                 cliente,
                 agencia,
                 tipoConta,
-                senha
+                senhaHash
         );
 
         contaRepository.salvar(conta);

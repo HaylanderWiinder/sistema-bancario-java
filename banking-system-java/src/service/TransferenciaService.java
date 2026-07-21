@@ -11,6 +11,7 @@ import model.Movimentacao;
 import repository.ClienteRepository;
 import repository.ContaRepository;
 import repository.MovimentacaoRepository;
+import util.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Scanner;
@@ -80,8 +81,12 @@ public class TransferenciaService {
         System.out.print("Confirme sua senha: ");
         String senha = scanner.nextLine();
 
-        if (!contaOrigem.getSenha().equals(senha)) {
+        if (!PasswordEncoder.verificarSenha(
+                senha,
+                contaOrigem.getSenha())) {
+
             throw new SenhaInvalidaException();
+
         }
 
         contaOrigem.transferir(contaDestino, valor);

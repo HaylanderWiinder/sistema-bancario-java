@@ -1,5 +1,6 @@
 package service;
 
+import util.PasswordEncoder;
 import exception.ClienteNaoEncontradoException;
 import exception.ContaNaoEncontradaException;
 import exception.SenhaInvalidaException;
@@ -48,7 +49,10 @@ public class LoginService {
                     throw new ContaNaoEncontradaException();
                 }
 
-                if (!conta.getSenha().equals(senha)) {
+                if (!PasswordEncoder.verificarSenha(
+                        senha,
+                        conta.getSenha())) {
+
                     throw new SenhaInvalidaException();
                 }
 

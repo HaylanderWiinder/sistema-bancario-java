@@ -6,8 +6,4 @@ public class BancoException extends RuntimeException {
         super(mensagem);
     }
 
-    public BancoException(String mensagem, Throwable causa) {
-        super(mensagem, causa);
-    }
-
 }
