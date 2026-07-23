@@ -6,6 +6,7 @@ import model.Cliente;
 import model.Conta;
 import repository.ClienteRepository;
 import repository.ContaRepository;
+import model.enums.TipoConta;
 
 import java.util.Scanner;
 
@@ -80,7 +81,7 @@ public class ContaService {
         // TIPO DA CONTA
         // ==============
 
-        String tipoConta = escolherTipoConta();
+        TipoConta tipoConta = escolherTipoConta();
 
         // ==================
         // SENHA
@@ -110,7 +111,7 @@ public class ContaService {
 
     }
 
-    private String escolherTipoConta() {
+    private TipoConta escolherTipoConta() {
 
         while (true) {
 
@@ -128,10 +129,10 @@ public class ContaService {
             switch (opcao) {
 
                 case 1:
-                    return "Corrente";
+                    return TipoConta.CORRENTE;
 
                 case 2:
-                    return "Poupança";
+                    return TipoConta.POUPANCA;
 
                 default:
                     System.out.println("Opção inválida.");

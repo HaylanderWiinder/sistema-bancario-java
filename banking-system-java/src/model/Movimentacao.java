@@ -1,12 +1,14 @@
 package model;
 
+import model.enums.TipoMovimentacao;
+
 import java.time.LocalDateTime;
 
 public class Movimentacao {
 
     private int id;
     private Conta conta;
-    private String tipo;
+    private TipoMovimentacao tipo;
     private double valor;
     private String descricao;
     private LocalDateTime dataHora;
@@ -15,7 +17,7 @@ public class Movimentacao {
     }
 
     public Movimentacao(Conta conta,
-                        String tipo,
+                        TipoMovimentacao tipo,
                         double valor,
                         String descricao,
                         LocalDateTime dataHora) {
@@ -44,11 +46,11 @@ public class Movimentacao {
         this.conta = conta;
     }
 
-    public String getTipo() {
+    public TipoMovimentacao getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(TipoMovimentacao tipo) {
         this.tipo = tipo;
     }
 

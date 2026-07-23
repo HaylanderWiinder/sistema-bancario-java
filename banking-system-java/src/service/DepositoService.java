@@ -2,11 +2,10 @@ package service;
 
 import exception.ValorInvalidoException;
 import model.Conta;
-import model.Movimentacao;
+import model.enums.TipoMovimentacao;
 import repository.ContaRepository;
-import repository.MovimentacaoRepository;
+import util.ValidacaoUtil;
 
-import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class DepositoService {
@@ -16,8 +15,8 @@ public class DepositoService {
     private final ContaRepository contaRepository =
             new ContaRepository();
 
-    private final MovimentacaoRepository movimentacaoRepository =
-            new MovimentacaoRepository();
+    private final MovimentacaoService movimentacaoService =
+            new MovimentacaoService();
 
     public void depositar(Conta conta) {
 
@@ -29,23 +28,18 @@ public class DepositoService {
         double valor = scanner.nextDouble();
         scanner.nextLine();
 
-        if (valor <= 0) {
-            throw new ValorInvalidoException();
-        }
+        ValidacaoUtil.validarValor(valor);
 
         conta.depositar(valor);
 
         contaRepository.atualizarSaldo(conta);
 
-        Movimentacao movimentacao = new Movimentacao();
-
-        movimentacao.setConta(conta);
-        movimentacao.setTipo("DEPÓSITO");
-        movimentacao.setValor(valor);
-        movimentacao.setDescricao("Depósito realizado na conta.");
-        movimentacao.setDataHora(LocalDateTime.now());
-
-        movimentacaoRepository.salvar(movimentacao);
+        movimentacaoService.registrar(
+                conta,
+                TipoMovimentacao.DEPOSITO,
+                valor,
+                "Depósito realizado na conta."
+        );
 
         System.out.println();
         System.out.println("Depósito realizado com sucesso!");

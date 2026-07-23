@@ -1,5 +1,7 @@
 package model;
 
+import model.enums.TipoConta;
+
 public class Conta {
 
     private int id;
@@ -7,12 +9,12 @@ public class Conta {
     private Agencia agencia;
     private String numeroConta;
     private String senha;
-    private String tipoConta;
+    private TipoConta tipoConta;
     private double saldo;
 
     public Conta(Cliente cliente,
                  Agencia agencia,
-                 String tipoConta,
+                 TipoConta tipoConta,
                  String senha) {
 
         this.cliente = cliente;
@@ -55,7 +57,7 @@ public class Conta {
         return senha;
     }
 
-    public String getTipoConta() {
+    public TipoConta getTipoConta() {
         return tipoConta;
     }
 

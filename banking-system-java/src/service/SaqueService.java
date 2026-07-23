@@ -1,13 +1,10 @@
 package service;
 
-import exception.SaldoInsuficienteException;
-import exception.ValorInvalidoException;
 import model.Conta;
-import model.Movimentacao;
+import model.enums.TipoMovimentacao;
 import repository.ContaRepository;
-import repository.MovimentacaoRepository;
+import util.ValidacaoUtil;
 
-import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class SaqueService {
@@ -17,8 +14,8 @@ public class SaqueService {
     private final ContaRepository contaRepository =
             new ContaRepository();
 
-    private final MovimentacaoRepository movimentacaoRepository =
-            new MovimentacaoRepository();
+    private final MovimentacaoService movimentacaoService =
+            new MovimentacaoService();
 
     public void sacar(Conta conta) {
 
@@ -30,27 +27,20 @@ public class SaqueService {
         double valor = scanner.nextDouble();
         scanner.nextLine();
 
-        if (valor <= 0) {
-            throw new ValorInvalidoException();
-        }
+        ValidacaoUtil.validarValor(valor);
 
-        if (conta.getSaldo() < valor) {
-            throw new SaldoInsuficienteException();
-        }
+        ValidacaoUtil.validarSaldo(conta, valor);
 
         conta.sacar(valor);
 
         contaRepository.atualizarSaldo(conta);
 
-        Movimentacao movimentacao = new Movimentacao();
-
-        movimentacao.setConta(conta);
-        movimentacao.setTipo("SAQUE");
-        movimentacao.setValor(valor);
-        movimentacao.setDescricao("Saque realizado.");
-        movimentacao.setDataHora(LocalDateTime.now());
-
-        movimentacaoRepository.salvar(movimentacao);
+        movimentacaoService.registrar(
+                conta,
+                TipoMovimentacao.SAQUE,
+                valor,
+                "Saque realizado."
+        );
 
         System.out.println();
         System.out.println("Saque realizado com sucesso!");

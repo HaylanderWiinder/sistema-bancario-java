@@ -3,6 +3,7 @@ package repository;
 import database.Conexao;
 import model.Conta;
 import model.Movimentacao;
+import model.enums.TipoMovimentacao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,7 +40,7 @@ public class MovimentacaoRepository {
             PreparedStatement statement = conexao.prepareStatement(sql);
 
             statement.setInt(1, movimentacao.getConta().getId());
-            statement.setString(2, movimentacao.getTipo());
+            statement.setString(2, movimentacao.getTipo().name());
             statement.setDouble(3, movimentacao.getValor());
             statement.setString(4, movimentacao.getDescricao());
             statement.setTimestamp(
@@ -97,7 +98,9 @@ public class MovimentacaoRepository {
                 movimentacao.setConta(conta);
 
                 movimentacao.setTipo(
-                        resultado.getString("tipo")
+                        TipoMovimentacao.valueOf(
+                                resultado.getString("tipo")
+                        )
                 );
 
                 movimentacao.setValor(

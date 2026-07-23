@@ -1,19 +1,14 @@
 package service;
 
 import exception.ContaNaoEncontradaException;
-import exception.SaldoInsuficienteException;
-import exception.SenhaInvalidaException;
 import exception.TransferenciaInvalidaException;
-import exception.ValorInvalidoException;
 import model.Cliente;
 import model.Conta;
-import model.Movimentacao;
+import model.enums.TipoMovimentacao;
 import repository.ClienteRepository;
 import repository.ContaRepository;
-import repository.MovimentacaoRepository;
-import util.PasswordEncoder;
+import util.ValidacaoUtil;
 
-import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class TransferenciaService {
@@ -26,8 +21,8 @@ public class TransferenciaService {
     private final ContaRepository contaRepository =
             new ContaRepository();
 
-    private final MovimentacaoRepository movimentacaoRepository =
-            new MovimentacaoRepository();
+    private final MovimentacaoService movimentacaoService =
+            new MovimentacaoService();
 
     public void transferir(Conta contaOrigem) {
 
@@ -53,11 +48,7 @@ public class TransferenciaService {
             );
         }
 
-        if (contaDestino.getId() == contaOrigem.getId()) {
-            throw new TransferenciaInvalidaException(
-                    "Não é permitido transferir para a própria conta."
-            );
-        }
+        ValidacaoUtil.validarTransferencia(contaOrigem,contaDestino);
 
         System.out.println();
         System.out.println("===== DESTINATÁRIO =====");
@@ -69,64 +60,50 @@ public class TransferenciaService {
         double valor = scanner.nextDouble();
         scanner.nextLine();
 
-        if (valor <= 0) {
-            throw new ValorInvalidoException();
-        }
+        ValidacaoUtil.validarValor(valor);
 
-        if (contaOrigem.getSaldo() < valor) {
-            throw new SaldoInsuficienteException();
-        }
+        ValidacaoUtil.validarSaldo(contaOrigem,valor);
 
         System.out.println();
         System.out.print("Confirme sua senha: ");
         String senha = scanner.nextLine();
 
-        if (!PasswordEncoder.verificarSenha(
-                senha,
-                contaOrigem.getSenha())) {
-
-            throw new SenhaInvalidaException();
-
-        }
+        ValidacaoUtil.validarSenha(contaOrigem,senha);
 
         contaOrigem.transferir(contaDestino, valor);
 
         contaRepository.atualizarSaldo(contaOrigem);
         contaRepository.atualizarSaldo(contaDestino);
 
-        Movimentacao envio = new Movimentacao();
-
-        envio.setConta(contaOrigem);
-        envio.setTipo("TRANSFERÊNCIA ENVIADA");
-        envio.setValor(valor);
-        envio.setDescricao(
+        String descricaoEnvio =
                 "Transferência para "
                         + contaDestino.getCliente().getNome()
                         + " | Agência "
                         + contaDestino.getAgencia().getCodigo()
                         + " | Conta "
-                        + contaDestino.getNumeroConta()
+                        + contaDestino.getNumeroConta();
+
+        movimentacaoService.registrar(
+                contaOrigem,
+                TipoMovimentacao.TRANSFERENCIA_ENVIADA,
+                valor,
+                descricaoEnvio
         );
-        envio.setDataHora(LocalDateTime.now());
 
-        movimentacaoRepository.salvar(envio);
-
-        Movimentacao recebimento = new Movimentacao();
-
-        recebimento.setConta(contaDestino);
-        recebimento.setTipo("TRANSFERÊNCIA RECEBIDA");
-        recebimento.setValor(valor);
-        recebimento.setDescricao(
+        String descricaoRecebimento =
                 "Transferência recebida de "
                         + contaOrigem.getCliente().getNome()
                         + " | Agência "
                         + contaOrigem.getAgencia().getCodigo()
                         + " | Conta "
-                        + contaOrigem.getNumeroConta()
-        );
-        recebimento.setDataHora(LocalDateTime.now());
+                        + contaOrigem.getNumeroConta();
 
-        movimentacaoRepository.salvar(recebimento);
+        movimentacaoService.registrar(
+                contaDestino,
+                TipoMovimentacao.TRANSFERENCIA_RECEBIDA,
+                valor,
+                descricaoRecebimento
+        );
 
         System.out.println();
         System.out.println("================================");

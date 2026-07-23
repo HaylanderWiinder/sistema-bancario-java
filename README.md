@@ -9,6 +9,7 @@ Projeto desenvolvido em **Java + MySQL** com foco em aplicar conceitos de Progra
 - Java
 - JDBC
 - MySQL
+- BCrypt
 - IntelliJ IDEA
 - Git
 - GitHub
@@ -19,16 +20,53 @@ Projeto desenvolvido em **Java + MySQL** com foco em aplicar conceitos de Progra
 
 O projeto foi organizado utilizando separação de responsabilidades.
 
-```
+```text
 src
 │
 ├── app
+│   └── Main.java
+│
 ├── database
+│   └── Conexao.java
+│
 ├── exception
+│   ├── ClienteNaoEncontradoException.java
+│   ├── ContaNaoEncontradaException.java
+│   ├── SaldoInsuficienteException.java
+│   ├── SenhaInvalidaException.java
+│   ├── TransferenciaInvalidaException.java
+│   └── ValorInvalidoException.java
+│
 ├── model
+│   ├── Agencia.java
+│   ├── Cliente.java
+│   ├── Conta.java
+│   ├── Movimentacao.java
+│   │
+│   └── enums
+│       ├── TipoConta.java
+│       └── TipoMovimentacao.java
+│
 ├── repository
+│   ├── AgenciaRepository.java
+│   ├── ClienteRepository.java
+│   ├── ContaRepository.java
+│   └── MovimentacaoRepository.java
+│
 ├── service
+│   ├── AgenciaService.java
+│   ├── ContaService.java
+│   ├── DepositoService.java
+│   ├── ExtratoService.java
+│   ├── LoginService.java
+│   ├── MenuContaService.java
+│   ├── MovimentacaoService.java
+│   ├── SaqueService.java
+│   └── TransferenciaService.java
+│
 └── util
+    ├── PasswordEncoder.java
+    └── ValidacaoUtil.java
 ```
 
 Cada camada possui uma responsabilidade específica:
@@ -38,6 +76,36 @@ Cada camada possui uma responsabilidade específica:
 - **service** → Regras de negócio
 - **exception** → Exceções personalizadas
 - **database** → Conexão JDBC
+- **util** → Utilitários e validações compartilhadas
+
+---
+
+# 🏛️ Diagrama da Arquitetura
+
+```text
+                         Usuário
+                            │
+                            ▼
+                     Classe Main (app)
+                            │
+                            ▼
+                 ┌──────────────────────┐
+                 │       Services       │
+                 └──────────────────────┘
+          │               │               │
+          ▼               ▼               ▼
+   Regras de negócio  Validações    Criptografia
+                         (Util)         BCrypt
+          │
+          ▼
+      Repositories
+          │
+          ▼
+     JDBC / MySQL
+          │
+          ▼
+     Banco de Dados
+```
 
 ---
 
@@ -46,6 +114,7 @@ Cada camada possui uma responsabilidade específica:
 - Cadastro de clientes
 - Abertura de contas
 - Login por CPF e senha
+- Criptografia de senha com **BCrypt**
 - Depósito
 - Saque
 - Transferência entre contas
@@ -56,6 +125,8 @@ Cada camada possui uma responsabilidade específica:
 - Numeração automática de contas
 - Escolha da agência
 - Escolha do tipo de conta
+- Validações centralizadas
+- Tratamento de exceções personalizadas
 
 ---
 
@@ -75,6 +146,10 @@ Cada camada possui uma responsabilidade específica:
 - Arquitetura em camadas
 - Persistência de dados
 - Relacionamento entre entidades
+- Enum
+- BCrypt (Hash de senhas)
+- Refatoração
+- Clean Code
 
 ---
 
@@ -102,11 +177,10 @@ O objetivo é desenvolver um sistema bancário cada vez mais próximo de aplica�
 
 # 🔄 Próximas implementações
 
-- Enum para TipoConta
-- Enum para TipoMovimentacao
 - Validação de CPF
 - Encerramento de conta
 - Alteração de senha
+- Bloqueio de conta após tentativas inválidas
 - Logs da aplicação
 - Testes unitários (JUnit)
 - Spring Boot

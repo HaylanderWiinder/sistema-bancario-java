@@ -4,6 +4,7 @@ import database.Conexao;
 import model.Agencia;
 import model.Cliente;
 import model.Conta;
+import model.enums.TipoConta;
 
 import java.sql.*;
 
@@ -41,7 +42,7 @@ public class ContaRepository {
             statement.setInt(1, conta.getCliente().getId());
             statement.setInt(2, conta.getAgencia().getId());
             statement.setString(3, conta.getNumeroConta());
-            statement.setString(4, conta.getTipoConta());
+            statement.setString(4, conta.getTipoConta().name());
             statement.setString(5, conta.getSenha());
             statement.setDouble(6, conta.getSaldo());
 
@@ -154,7 +155,9 @@ public class ContaRepository {
                 Conta conta = new Conta(
                         cliente,
                         agencia,
-                        resultado.getString("tipo_conta"),
+                        TipoConta.valueOf(
+                                resultado.getString("tipo_conta")
+                        ),
                         resultado.getString("senha")
                 );
 
@@ -251,7 +254,9 @@ public class ContaRepository {
                 Conta conta = new Conta(
                         cliente,
                         agencia,
-                        resultado.getString("tipo_conta"),
+                        TipoConta.valueOf(
+                                resultado.getString("tipo_conta")
+                        ),
                         resultado.getString("senha")
                 );
 

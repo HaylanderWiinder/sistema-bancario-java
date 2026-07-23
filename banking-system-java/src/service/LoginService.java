@@ -1,6 +1,5 @@
 package service;
 
-import util.PasswordEncoder;
 import exception.ClienteNaoEncontradoException;
 import exception.ContaNaoEncontradaException;
 import exception.SenhaInvalidaException;
@@ -8,6 +7,7 @@ import model.Cliente;
 import model.Conta;
 import repository.ClienteRepository;
 import repository.ContaRepository;
+import util.ValidacaoUtil;
 
 import java.util.Scanner;
 
@@ -39,22 +39,13 @@ public class LoginService {
 
                 Cliente cliente = clienteRepository.buscarPorCpf(cpf);
 
-                if (cliente == null) {
-                    throw new ClienteNaoEncontradoException();
-                }
+               ValidacaoUtil.validarCliente(cliente);
 
                 Conta conta = contaRepository.buscarPorCliente(cliente);
 
-                if (conta == null) {
-                    throw new ContaNaoEncontradaException();
-                }
+               ValidacaoUtil.validarConta(conta);
 
-                if (!PasswordEncoder.verificarSenha(
-                        senha,
-                        conta.getSenha())) {
-
-                    throw new SenhaInvalidaException();
-                }
+                ValidacaoUtil.validarSenha(conta,senha);
 
                 System.out.println();
                 System.out.println("====================================");
